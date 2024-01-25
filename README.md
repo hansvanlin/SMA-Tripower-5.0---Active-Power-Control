@@ -1,7 +1,7 @@
 This flow can be used as a starting point to reduce the generated power of your inverter.
 It makes use of the inverters modbus. You should enable the TCP modbus first en also external control.
 For manual control the slider can be use to set the powerlevel in %,
-or active control depending on the energy used. You need to measure or calculated the current use and feed that as input.
+or active control depending on the energy used, for this you need to measure or calculated the current use and feed that as input.
 
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Acitive-Power-Control/assets/108009649/96f105f3-de42-4f0c-b56f-d3e5ef26520d)
 
