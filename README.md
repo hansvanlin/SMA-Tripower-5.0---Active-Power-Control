@@ -1,8 +1,8 @@
-This flow can be used as a starting point to reduce the generated power of your inverter.
-It makes use of the inverters modbus. 
+This flow can be used as a starting point to reduce the generated power of your inverter. \
+It makes use of the inverters modbus. \
 You should enable the TCP modbus first en also external control.
 
-For manual control the slider can be use to set the powerlevel in %,
+For manual control the slider can be use to set the powerlevel in %, \
 or active control depending on the energy used, 
 for this you need to measure or calculated the current use and feed that as input.
 
