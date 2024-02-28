@@ -1,0 +1,672 @@
+[
+    {
+        "id": "4d381f093e6152d7",
+        "type": "tab",
+        "label": "SMA Sunny Tripower 5.0",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f87a84eaf3997bc8",
+        "type": "modbus-write",
+        "z": "4d381f093e6152d7",
+        "name": "SMA Modbus Write 40023 ( Limit )",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "40023",
+        "quantity": "1",
+        "server": "67aa8a7899544f4d",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1200,
+        "y": 420,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "42010d55d522140c",
+        "type": "inject",
+        "z": "4d381f093e6152d7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 250,
+        "y": 135,
+        "wires": [
+            [
+                "546a95fa24eaeb8b"
+            ]
+        ]
+    },
+    {
+        "id": "546a95fa24eaeb8b",
+        "type": "modbus-getter",
+        "z": "4d381f093e6152d7",
+        "name": "SMA Modbus (41255) Power",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "41255",
+        "quantity": "2",
+        "server": "67aa8a7899544f4d",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 515,
+        "y": 135,
+        "wires": [
+            [
+                "c6a119a3da6f8bee",
+                "e35f2cf319a71233"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7ae2fde1fbced2af",
+        "type": "ui_text",
+        "z": "4d381f093e6152d7",
+        "group": "4fb0db5cea9cd881",
+        "order": 3,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Actual Power Limit",
+        "format": "{{msg.payload}} %",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#ffffff",
+        "x": 1055,
+        "y": 105,
+        "wires": []
+    },
+    {
+        "id": "c6a119a3da6f8bee",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "Power Limit",
+        "func": "var limit = msg.payload[0] /100;\n\n\n\nreturn [{ payload: limit }]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 805,
+        "y": 105,
+        "wires": [
+            [
+                "7ae2fde1fbced2af"
+            ]
+        ]
+    },
+    {
+        "id": "ec92a1d03709eeda",
+        "type": "ui_slider",
+        "z": "4d381f093e6152d7",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "group": "4fb0db5cea9cd881",
+        "order": 6,
+        "width": 4,
+        "height": 1,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "10",
+        "max": "100",
+        "step": "5",
+        "className": "",
+        "x": 810,
+        "y": 420,
+        "wires": [
+            [
+                "c3adf3a742914aaa",
+                "191dd49f3ab6321e"
+            ]
+        ]
+    },
+    {
+        "id": "c0e282528bba806c",
+        "type": "ui_text",
+        "z": "4d381f093e6152d7",
+        "group": "4fb0db5cea9cd881",
+        "order": 4,
+        "width": 2,
+        "height": 1,
+        "name": "%",
+        "label": "",
+        "format": "{{msg.payload}} W",
+        "layout": "row-right",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#ffffff",
+        "x": 1095,
+        "y": 165,
+        "wires": []
+    },
+    {
+        "id": "e35f2cf319a71233",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "Power Limit %",
+        "func": "var pro = msg.payload[0] * 0.5;\n\n\n\nreturn [{ payload: pro }]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 165,
+        "wires": [
+            [
+                "c0e282528bba806c"
+            ]
+        ]
+    },
+    {
+        "id": "c3adf3a742914aaa",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "* 100",
+        "func": "var lim = msg.payload *100;\nreturn [{payload: lim}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 420,
+        "wires": [
+            [
+                "f87a84eaf3997bc8"
+            ]
+        ]
+    },
+    {
+        "id": "191dd49f3ab6321e",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "* 50",
+        "func": "var lim = msg.payload *50;\nreturn [{payload: lim}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 520,
+        "wires": [
+            [
+                "e88135e8a1039491"
+            ]
+        ]
+    },
+    {
+        "id": "e88135e8a1039491",
+        "type": "ui_text",
+        "z": "4d381f093e6152d7",
+        "group": "4fb0db5cea9cd881",
+        "order": 7,
+        "width": 2,
+        "height": 1,
+        "name": "set:",
+        "label": "",
+        "format": "{{msg.payload}} W",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#19e119",
+        "x": 1130,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "5218e7e434cbfdbd",
+        "type": "comment",
+        "z": "4d381f093e6152d7",
+        "name": "Read Modbus values",
+        "info": "",
+        "x": 160,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2b890f465fbcdfdc",
+        "type": "comment",
+        "z": "4d381f093e6152d7",
+        "name": "Write Modbus Register",
+        "info": "",
+        "x": 160,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "25103bd88bc2ab96",
+        "type": "comment",
+        "z": "4d381f093e6152d7",
+        "name": "Dynamic Control P-limit",
+        "info": "",
+        "x": 320,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "1676718e16852e98",
+        "type": "link in",
+        "z": "4d381f093e6152d7",
+        "name": "actual use in 1",
+        "links": [
+            "b792982110625bd6"
+        ],
+        "x": 185,
+        "y": 780,
+        "wires": [
+            [
+                "7ff1a9a7f80d1877",
+                "e10ec800de59a308"
+            ]
+        ]
+    },
+    {
+        "id": "3e56a6c32a84927f",
+        "type": "comment",
+        "z": "4d381f093e6152d7",
+        "name": "actual use in",
+        "info": "",
+        "x": 110,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "e10ec800de59a308",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "Power limit factor",
+        "func": "var marge = 375 ;\nvar Limfactor = (msg.payload + marge) / 5000 ;\nreturn [{ payload: Limfactor }];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 780,
+        "wires": [
+            [
+                "5b3343720f53c318"
+            ]
+        ]
+    },
+    {
+        "id": "9757adc25ad441bf",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "* 100",
+        "func": "var lim = msg.payload *100 ;\nvar limit = Math.ceil(lim) ; \nreturn [{payload: limit}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 860,
+        "wires": [
+            [
+                "3ba93ece81967f14"
+            ]
+        ]
+    },
+    {
+        "id": "b7cbe9365ec96ff7",
+        "type": "delay",
+        "z": "4d381f093e6152d7",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "6",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1050,
+        "y": 700,
+        "wires": [
+            [
+                "ec92a1d03709eeda"
+            ]
+        ]
+    },
+    {
+        "id": "0f54edbb38c56411",
+        "type": "ui_switch",
+        "z": "4d381f093e6152d7",
+        "name": "Dynamic Control",
+        "label": "Dynamic Control",
+        "tooltip": "",
+        "group": "4fb0db5cea9cd881",
+        "order": 8,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "decouple": "false",
+        "topic": "state",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "on",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "off",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 320,
+        "y": 700,
+        "wires": [
+            [
+                "0160aa5e3efc4f1a",
+                "268493ed71720a3b"
+            ]
+        ]
+    },
+    {
+        "id": "7ff1a9a7f80d1877",
+        "type": "ui_text",
+        "z": "4d381f093e6152d7",
+        "group": "4fb0db5cea9cd881",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "name": "Actual",
+        "label": "Actual Use",
+        "format": "{{msg.payload}} W",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#0a95eb",
+        "x": 310,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "5944b2024e02cd5a",
+        "type": "ui_text",
+        "z": "4d381f093e6152d7",
+        "group": "4fb0db5cea9cd881",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "Power limit factor",
+        "label": "Dynamic Limit",
+        "format": "{{msg.payload}} %",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#aeb4b7",
+        "x": 850,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "5b3343720f53c318",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "abs",
+        "func": "var abs = Math.abs(msg.payload);\n\nreturn [{ payload: abs }]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 860,
+        "wires": [
+            [
+                "9757adc25ad441bf"
+            ]
+        ]
+    },
+    {
+        "id": "0160aa5e3efc4f1a",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "Flow On/OFF",
+        "func": "var state = context.get(\"state\") || \"off\";\n\n// Display initial state status\nif (state == \"on\") {\n    node.status({ fill: \"green\", shape: \"dot\", text: state });\n} else {\n    node.status({ fill: \"red\", shape: \"dot\", text: state });\n}\n\nif (msg.topic == \"state\") {\n    context.set(\"state\", msg.payload);\n    state = msg.payload;\n    // update status\n    if (state == \"on\") {\n        node.status({ fill: \"green\", shape: \"dot\", text: state });\n    } else {\n        node.status({ fill: \"red\", shape: \"dot\", text: state });\n    }\n} else {\n    if (state == \"on\") {\n        return msg;\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "// Code added here will be run when the\n// node is being stopped or re-deployed.\n//var max = 100;\n//return [{ payload:max}];",
+        "libs": [],
+        "x": 620,
+        "y": 700,
+        "wires": [
+            [
+                "62bc963d8358204a",
+                "9c153229b8d0806f"
+            ]
+        ]
+    },
+    {
+        "id": "733b7b4cf87e4226",
+        "type": "comment",
+        "z": "4d381f093e6152d7",
+        "name": "Manual",
+        "info": "",
+        "x": 710,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "86d20df9e554aa30",
+        "type": "inject",
+        "z": "4d381f093e6152d7",
+        "name": "Daily reset to 100%",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 00 * * *",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "100",
+        "payloadType": "num",
+        "x": 280,
+        "y": 420,
+        "wires": [
+            [
+                "ec92a1d03709eeda"
+            ]
+        ]
+    },
+    {
+        "id": "3ba93ece81967f14",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "range (min-max)",
+        "func": "var min = 10 ;\nvar max = 100 ;\n\nvar limit = msg.payload ;\n\nif (limit > max) {\n    limit = max;\n} else if (limit < min) {\n    limit = min;\n} \n\n\nreturn[{payload:limit}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 860,
+        "wires": [
+            [
+                "0160aa5e3efc4f1a",
+                "5944b2024e02cd5a"
+            ]
+        ]
+    },
+    {
+        "id": "268493ed71720a3b",
+        "type": "function",
+        "z": "4d381f093e6152d7",
+        "name": "reset after off",
+        "func": "var state = context.get(\"state\") || \"off\";\nvar max = 100;\n\nif (state == \"off\") {\n    return [{ payload: max }];\n\n}\n\n\n//var max = 100;\n//return [{ payload:max}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 640,
+        "wires": [
+            [
+                "ec92a1d03709eeda"
+            ]
+        ]
+    },
+    {
+        "id": "62bc963d8358204a",
+        "type": "smooth",
+        "z": "4d381f093e6152d7",
+        "name": "",
+        "property": "payload",
+        "action": "low",
+        "count": "20",
+        "round": "1",
+        "mult": "single",
+        "reduce": false,
+        "x": 840,
+        "y": 700,
+        "wires": [
+            [
+                "b7cbe9365ec96ff7",
+                "8acbd741879b2dd6"
+            ]
+        ]
+    },
+    {
+        "id": "8acbd741879b2dd6",
+        "type": "debug",
+        "z": "4d381f093e6152d7",
+        "name": "debug 30",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "9c153229b8d0806f",
+        "type": "debug",
+        "z": "4d381f093e6152d7",
+        "name": "debug 31",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "67aa8a7899544f4d",
+        "type": "modbus-client",
+        "name": "SMA Modbus",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.178.4",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": 3,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": true,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "4fb0db5cea9cd881",
+        "type": "ui_group",
+        "name": "SMA  settings",
+        "tab": "cccf47e4.857ec8",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "cccf47e4.857ec8",
+        "type": "ui_tab",
+        "name": "Energy",
+        "icon": "battery_charging_60",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
