@@ -17,6 +17,8 @@ for this you need to measure or calculated the current use and feed that as inpu
 
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/fcb6ea51-51ea-46e1-958d-57159f95a91b)
 
+![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/3d65d528-62fa-4543-8fda-0686908ec337)
+
 
 
 
