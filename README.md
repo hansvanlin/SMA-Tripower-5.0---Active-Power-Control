@@ -40,7 +40,7 @@ Demo: https://youtube.com/shorts/uC5JbVD4Qa8
 
 version: 
 
-0.6 : UI change and added upcoming hours
+0.6 : UI change and added upcoming hours \
 0.5 : added Dynamic Price Control \
 0.4 : added graph and marge \
 0.3 : cleaned up 
