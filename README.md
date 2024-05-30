@@ -8,6 +8,9 @@ for this you need to measure or calculated the current use and feed that as inpu
 
 As an example I used anwb current hour price as input for the Dynamic Price Control.
 
+![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/4ee3cdd7-6fae-4055-a493-a5215bb65103)
+
+
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/ddc45c4e-2d7d-4061-b047-982a578b0470)
 
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/89b4c1f8-5a57-4df6-b824-d70acfd88006)
@@ -45,6 +48,7 @@ Demo: https://youtube.com/shorts/uC5JbVD4Qa8
 
 version: 
 
+0.8 : Added indicators for debugging and clean up. \
 0.7 : Added inverter power config and moved stuff to subflows \
 0.6 : UI change and added upcoming hours \
 0.5 : added Dynamic Price Control \
