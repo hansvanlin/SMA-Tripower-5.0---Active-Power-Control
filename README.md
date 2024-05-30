@@ -48,6 +48,7 @@ Demo: https://youtube.com/shorts/uC5JbVD4Qa8
 
 version: 
 
+0.8.1.2 : Fixed issue with price limit slider \
 0.8 : Added indicators for debugging and clean up. \
 0.7 : Added inverter power config and moved stuff to subflows \
 0.6 : UI change and added upcoming hours \
