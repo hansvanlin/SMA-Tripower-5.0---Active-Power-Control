@@ -1,0 +1,244 @@
+[
+    {
+        "id": "4e2c97558a82647d",
+        "type": "tab",
+        "label": "AC-power",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0440685e89c7ab0a",
+        "type": "inject",
+        "z": "4e2c97558a82647d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 175,
+        "y": 255,
+        "wires": [
+            [
+                "d2316d7d605aa201"
+            ]
+        ]
+    },
+    {
+        "id": "d2316d7d605aa201",
+        "type": "modbus-getter",
+        "z": "4e2c97558a82647d",
+        "name": "SMA Modbus AC Power 30775",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "30775",
+        "quantity": "2",
+        "server": "67aa8a7899544f4d",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 445,
+        "y": 255,
+        "wires": [
+            [
+                "9e3e8824bf34a6a8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "9e3e8824bf34a6a8",
+        "type": "function",
+        "z": "4e2c97558a82647d",
+        "name": "AC Power",
+        "func": "var stroom = msg.payload[1];\n\n\n\nreturn[{payload:stroom}]\n\n//payload[0]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 795,
+        "y": 255,
+        "wires": [
+            [
+                "1be569a49b309b56"
+            ]
+        ]
+    },
+    {
+        "id": "1be569a49b309b56",
+        "type": "smooth",
+        "z": "4e2c97558a82647d",
+        "name": "",
+        "property": "payload",
+        "action": "mean",
+        "count": "3",
+        "round": "0",
+        "mult": "single",
+        "reduce": false,
+        "x": 975,
+        "y": 255,
+        "wires": [
+            [
+                "1ae30abf13852d60"
+            ]
+        ]
+    },
+    {
+        "id": "1ae30abf13852d60",
+        "type": "function",
+        "z": "4e2c97558a82647d",
+        "name": "0.xx",
+        "func": "msg.payload= msg.payload.toFixed(0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1145,
+        "y": 255,
+        "wires": [
+            [
+                "80a82c14519ec08c"
+            ]
+        ]
+    },
+    {
+        "id": "80a82c14519ec08c",
+        "type": "change",
+        "z": "4e2c97558a82647d",
+        "name": "Ac power",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Acpower",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1295,
+        "y": 255,
+        "wires": [
+            [
+                "b7c7a5634662053b",
+                "6ddbc01d53ce2554"
+            ]
+        ]
+    },
+    {
+        "id": "b7c7a5634662053b",
+        "type": "link out",
+        "z": "4e2c97558a82647d",
+        "name": "AC solar pwr",
+        "mode": "link",
+        "links": [
+            "c356a71b5c47d773"
+        ],
+        "x": 1425,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "6ddbc01d53ce2554",
+        "type": "ui_gauge",
+        "z": "4e2c97558a82647d",
+        "name": "AC Power",
+        "group": "3b8704e026eae2c8",
+        "order": 1,
+        "width": 2,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Solar Power",
+        "label": "Watt",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "5000",
+        "colors": [
+            "#0d7214",
+            "#1aa223",
+            "#21f221"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1470,
+        "y": 225,
+        "wires": []
+    },
+    {
+        "id": "67aa8a7899544f4d",
+        "type": "modbus-client",
+        "name": "SMA Modbus",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.178.4",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": 3,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": true,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "3b8704e026eae2c8",
+        "type": "ui_group",
+        "name": "Usage Today",
+        "tab": "cccf47e4.857ec8",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "cccf47e4.857ec8",
+        "type": "ui_tab",
+        "name": "Energy",
+        "icon": "battery_charging_60",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
