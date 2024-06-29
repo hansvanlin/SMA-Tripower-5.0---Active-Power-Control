@@ -21,14 +21,7 @@ As an example I used anwb current hour price as input for the Dynamic Price Cont
 
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/b64f95fc-caaa-470e-a2b1-3910e1c87ba2)
 
-![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/a4f35cdb-97e6-4886-a3d7-e22ccd114f68)
 
-
-![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/c1ab6c9e-19f8-4b4c-9cce-7eba64224901)
-
-![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/8a372839-bb50-45f0-aec4-413979507672)
-
-![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/fcb6ea51-51ea-46e1-958d-57159f95a91b)
 
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/3d65d528-62fa-4543-8fda-0686908ec337)
 
