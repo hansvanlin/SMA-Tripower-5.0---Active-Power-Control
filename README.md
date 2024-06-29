@@ -11,6 +11,10 @@ for this you need to measure or calculated the current use and feed that as inpu
 
 As an example I used anwb current hour price as input for the Dynamic Price Control.
 
+
+![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/c9d3bdbc-5d28-44c3-aa66-95e7dccc43d5)
+
+
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/4ee3cdd7-6fae-4055-a493-a5215bb65103)
 
 
