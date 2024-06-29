@@ -10,6 +10,10 @@ or active control depending on the energy used,
 for this you need to measure or calculated the current use and feed that as input.
 
 As an example I used anwb current hour price as input for the Dynamic Price Control.
+\
+\
+\
+SMA Settings flow:
 
 
 ![image](https://github.com/hansvanlin/SMA-Tripower-5.0---Active-Power-Control/assets/108009649/a6323ea4-b4d0-4a62-a42c-f63598dd7e85)
