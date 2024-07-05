@@ -46,6 +46,7 @@ Demo: https://youtube.com/shorts/uC5JbVD4Qa8
 
 version: 
 
+0.8.3 : Created a work around for Node-red issue: #4826 (broken node "http-get" in ver4.0)\
 0.8.2 : Added Option to use more than one inverter\
 0.8.1.2 : Fixed issue with price limit slider \
 0.8 : Added indicators for debugging and clean up. \
