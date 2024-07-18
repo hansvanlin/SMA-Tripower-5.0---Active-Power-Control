@@ -1,0 +1,4217 @@
+[
+    {
+        "id": "6daf500cc4957e3f",
+        "type": "subflow",
+        "name": "Dynamic Power Control (UI2.0)",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 250,
+                "y": 390,
+                "wires": [
+                    {
+                        "id": "fb8c3f04b3635452"
+                    },
+                    {
+                        "id": "e0b71c50850fd204"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1160,
+                "y": 270,
+                "wires": [
+                    {
+                        "id": "dc987298d504d87a",
+                        "port": 0
+                    },
+                    {
+                        "id": "064d6a789231232b",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "Dynamic Power Control",
+            "type": "Switch",
+            "desc": "switches flow and control"
+        },
+        "color": "#00ff99",
+        "icon": "node-red-dashboard/ui_switch.png",
+        "status": {
+            "x": 580,
+            "y": 135,
+            "wires": [
+                {
+                    "id": "238a704029ca012d",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "238a704029ca012d",
+        "type": "ui-switch",
+        "z": "6daf500cc4957e3f",
+        "name": "Dynamic Control",
+        "label": "Dynamic Control",
+        "group": "1f577f21a19951f0",
+        "order": 10,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "topic": "state",
+        "topicType": "str",
+        "style": "",
+        "className": "",
+        "onvalue": "on",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "off",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "x": 355,
+        "y": 270,
+        "wires": [
+            [
+                "fb8c3f04b3635452",
+                "064d6a789231232b",
+                "53a582ec07814501"
+            ]
+        ]
+    },
+    {
+        "id": "064d6a789231232b",
+        "type": "function",
+        "z": "6daf500cc4957e3f",
+        "name": "reset after off",
+        "func": "var state = context.get(\"state\") || \"off\";\nvar max = 100;\n\nif (state == \"off\") {\n    return [{ payload: max }];\n\n}\n\n\n//var max = 100;\n//return [{ payload:max}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 625,
+        "y": 270,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fb8c3f04b3635452",
+        "type": "function",
+        "z": "6daf500cc4957e3f",
+        "d": true,
+        "name": "Flow On/OFF",
+        "func": "var state = context.get(\"state\") || \"off\";\n\n// Display initial state status\nif (state == \"on\") {\n    node.status({ fill: \"green\", shape: \"dot\", text: state });\n} else {\n    node.status({ fill: \"red\", shape: \"dot\", text: state });\n}\n\nif (msg.topic == \"state\") {\n    context.set(\"state\", msg.payload);\n    state = msg.payload;\n    // update status\n    if (state == \"on\") {\n        node.status({ fill: \"green\", shape: \"dot\", text: state });\n    } else {\n        node.status({ fill: \"red\", shape: \"dot\", text: state });\n    }\n} else {\n    if (state == \"on\") {\n        return msg;\n    }\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "// Code added here will be run when the\n// node is being stopped or re-deployed.\n//var max = 100;\n//return [{ payload:max}];",
+        "libs": [],
+        "x": 635,
+        "y": 330,
+        "wires": [
+            [
+                "2a72b643f8fae5a6"
+            ]
+        ]
+    },
+    {
+        "id": "2a72b643f8fae5a6",
+        "type": "smooth",
+        "z": "6daf500cc4957e3f",
+        "name": "",
+        "property": "payload",
+        "action": "mean",
+        "count": "8",
+        "round": "1",
+        "mult": "single",
+        "reduce": false,
+        "x": 765,
+        "y": 390,
+        "wires": [
+            [
+                "dc987298d504d87a"
+            ]
+        ]
+    },
+    {
+        "id": "dc987298d504d87a",
+        "type": "delay",
+        "z": "6daf500cc4957e3f",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "6",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 950,
+        "y": 390,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "53a582ec07814501",
+        "type": "function",
+        "z": "6daf500cc4957e3f",
+        "name": "Store PowerControl State",
+        "func": "global.set(\"PowerControl\",msg.payload) ;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 210,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e0b71c50850fd204",
+        "type": "switch",
+        "z": "6daf500cc4957e3f",
+        "name": "",
+        "property": "PowerControl",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 605,
+        "y": 390,
+        "wires": [
+            [
+                "2a72b643f8fae5a6"
+            ]
+        ]
+    },
+    {
+        "id": "09d6fac281cb8b29",
+        "type": "subflow",
+        "name": "Dynamic Price Control (UI2.0)",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 380,
+                "y": 360,
+                "wires": [
+                    {
+                        "id": "e28ab025cd98a97b"
+                    },
+                    {
+                        "id": "139012bce1c25c69"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1070,
+                "y": 420,
+                "wires": [
+                    {
+                        "id": "1ee2b7d2222eb8c0",
+                        "port": 0
+                    },
+                    {
+                        "id": "eeca8cbbca11fb1e",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#00ff99",
+        "icon": "node-red-dashboard/ui_switch.png",
+        "status": {
+            "x": 595,
+            "y": 630,
+            "wires": [
+                {
+                    "id": "07ee8603b8e85b7c",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "07ee8603b8e85b7c",
+        "type": "ui-switch",
+        "z": "09d6fac281cb8b29",
+        "name": "Dynamic Price Control",
+        "label": "Dynamic Price Control",
+        "group": "1f577f21a19951f0",
+        "order": 11,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "topic": "state",
+        "topicType": "str",
+        "style": "",
+        "className": "",
+        "onvalue": "on",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "off",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "x": 400,
+        "y": 420,
+        "wires": [
+            [
+                "e28ab025cd98a97b",
+                "1ee2b7d2222eb8c0",
+                "b34c68b16c73bc43"
+            ]
+        ]
+    },
+    {
+        "id": "1ee2b7d2222eb8c0",
+        "type": "function",
+        "z": "09d6fac281cb8b29",
+        "name": "reset after off",
+        "func": "var state = context.get(\"state\") || \"off\";\nvar max = 100;\n\nif (state == \"off\") {\n    return [{ payload: max }];\n\n}\n\n\n//var max = 100;\n//return [{ payload:max}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e28ab025cd98a97b",
+        "type": "function",
+        "z": "09d6fac281cb8b29",
+        "d": true,
+        "name": "Flow On/OFF",
+        "func": "var state = context.get(\"state\") || \"off\";\n\n// Display initial state status\nif (state == \"on\") {\n    node.status({ fill: \"green\", shape: \"dot\", text: state });\n} else {\n    node.status({ fill: \"red\", shape: \"dot\", text: state });\n}\n\nif (msg.topic == \"state\") {\n    context.set(\"state\", msg.payload);\n    state = msg.payload;\n    // update status\n    if (state == \"on\") {\n        node.status({ fill: \"green\", shape: \"dot\", text: state });\n    } else {\n        node.status({ fill: \"red\", shape: \"dot\", text: state });\n    }\n} else {\n    if (state == \"on\") {\n        return msg;\n    }\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "// Code added here will be run when the\n// node is being stopped or re-deployed.\n//var max = 100;\n//return [{ payload:max}];",
+        "libs": [],
+        "x": 650,
+        "y": 285,
+        "wires": [
+            [
+                "eeca8cbbca11fb1e"
+            ]
+        ]
+    },
+    {
+        "id": "b34c68b16c73bc43",
+        "type": "function",
+        "z": "09d6fac281cb8b29",
+        "name": "Store PriceControl State",
+        "func": "global.set(\"PriceControl\",msg.payload) ;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 510,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eeca8cbbca11fb1e",
+        "type": "switch",
+        "z": "09d6fac281cb8b29",
+        "name": "",
+        "property": "PowerControl",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 880,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "139012bce1c25c69",
+        "type": "switch",
+        "z": "09d6fac281cb8b29",
+        "name": "",
+        "property": "PriceControl",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 625,
+        "y": 360,
+        "wires": [
+            [
+                "eeca8cbbca11fb1e"
+            ]
+        ]
+    },
+    {
+        "id": "637901a8a4b4fbe6",
+        "type": "subflow",
+        "name": "EnergyPrices",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 50,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "642e1e02d31f2b82"
+                    },
+                    {
+                        "id": "b55c5f93e7179200"
+                    },
+                    {
+                        "id": "f6ad99efaf0fecf3"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1125,
+                "y": 300,
+                "wires": [
+                    {
+                        "id": "58bd9f9d17e30d86",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1095,
+                "y": 345,
+                "wires": [
+                    {
+                        "id": "8d2526e34599be86",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1095,
+                "y": 390,
+                "wires": [
+                    {
+                        "id": "c0663112fcafb18f",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1095,
+                "y": 435,
+                "wires": [
+                    {
+                        "id": "a7f8c248df4852d8",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1095,
+                "y": 480,
+                "wires": [
+                    {
+                        "id": "733971ebba20bf11",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1280,
+                "y": 660,
+                "wires": [
+                    {
+                        "id": "037505c47b4006a9",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1255,
+                "y": 735,
+                "wires": [
+                    {
+                        "id": "2fc85b95db56f961",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1255,
+                "y": 780,
+                "wires": [
+                    {
+                        "id": "68de1cda98f33b79",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1255,
+                "y": 825,
+                "wires": [
+                    {
+                        "id": "7052bb1982e93141",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1255,
+                "y": 870,
+                "wires": [
+                    {
+                        "id": "2ee0030484d4f44b",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "inctax",
+                "type": "bool",
+                "value": "true",
+                "ui": {
+                    "icon": "font-awesome/fa-money",
+                    "type": "checkbox"
+                }
+            }
+        ],
+        "meta": {},
+        "color": "#00ff99",
+        "outputLabels": [
+            "Anwb Current Hour",
+            "anwb +1h",
+            "anwb +2h",
+            "anwb +3h",
+            "anwb +4h",
+            "Easyenergy Current Hour",
+            "Easyenergy +1h",
+            "Easyenergy +2h",
+            "Easyenergy +3h",
+            "Easyenergy +4h"
+        ],
+        "icon": "font-awesome/fa-euro",
+        "status": {
+            "x": 1090,
+            "y": 255,
+            "wires": [
+                {
+                    "id": "58bd9f9d17e30d86",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "2e9139c19f23e13d",
+        "type": "http request",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "14b807e09f5642ea",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 355,
+        "y": 690,
+        "wires": [
+            [
+                "644625a16db6440a"
+            ]
+        ]
+    },
+    {
+        "id": "642e1e02d31f2b82",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "create easyenergy url",
+        "func": "//msg.url = 'https://api.energyzero.nl/v1/energyprices';\n//msg.url = 'https://api.frankenergie.nl/energyprices';\n//msg.url = 'https://enever.nl/api/stroomprijs_vandaag.php?' ;\nmsg.url = 'https://mijn.easyenergy.com/nl/api/tariff/getapxtariffs?startTimestamp=2020-04-29T22%3A00%3A00.000Z&endTimestamp=2020-04-30T22%3A00%3A00.000Z&grouping=';\nvar offset = 0;\nmsg.delay = 0;\nvar start = new Date();\n\nif (env.get('type') == 'tomorrow') {\n    offset = 24;\n    const targetTime = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 15, 0, 0);\n    msg.delay = targetTime.getTime() - start.getTime();\n}\n\nstart.setUTCHours(0 + offset, start.getTimezoneOffset(), 0, 0);\nmsg.url += '?fromDate=' + start.toISOString();\n\nvar end = new Date();\nend.setUTCHours(23 + offset, start.getTimezoneOffset()+59, 59, 999);\nmsg.url += '&tillDate=' + end.toISOString();\n\nmsg.url += '&interval=4&usageType=1'\n\nif (env.get('inctax')) {\n    msg.url += '&inclBtw=true'\n} else {\n    msg.url += '&inclBtw=false'\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 145,
+        "y": 660,
+        "wires": [
+            [
+                "2e9139c19f23e13d",
+                "ed3bb870c762f97c"
+            ]
+        ]
+    },
+    {
+        "id": "644625a16db6440a",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "Convert to json",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 545,
+        "y": 660,
+        "wires": [
+            [
+                "aeda1169da185d31",
+                "0e9388ef15e02584",
+                "99e266b2ec0484f7",
+                "51a5073ee1312c54",
+                "b55e43d087cac8d4"
+            ]
+        ]
+    },
+    {
+        "id": "aeda1169da185d31",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current Price easyenergy",
+        "func": "const d = new Date();\n\nvar hourOffset = 0\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload[hour].TariffUsage; //select correct object\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 660,
+        "wires": [
+            [
+                "a370a08e1a8375de"
+            ]
+        ]
+    },
+    {
+        "id": "0e9388ef15e02584",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current Price easyenergy +1h",
+        "func": "const d = new Date();\n\nvar hourOffset = 1\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload[hour].TariffUsage; //select correct object\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 735,
+        "wires": [
+            [
+                "65e7c2cc47e2d3fd"
+            ]
+        ]
+    },
+    {
+        "id": "99e266b2ec0484f7",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current Price easyenergy +2h",
+        "func": "const d = new Date();\n\nvar hourOffset = 2\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload[hour].TariffUsage; //select correct object\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 780,
+        "wires": [
+            [
+                "ba53e64d2b533176"
+            ]
+        ]
+    },
+    {
+        "id": "65e7c2cc47e2d3fd",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "0.xx",
+        "func": "msg.payload= msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 735,
+        "wires": [
+            [
+                "2fc85b95db56f961"
+            ]
+        ]
+    },
+    {
+        "id": "ba53e64d2b533176",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "0.xx",
+        "func": "msg.payload= msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 780,
+        "wires": [
+            [
+                "68de1cda98f33b79"
+            ]
+        ]
+    },
+    {
+        "id": "c886ac55d5917c2c",
+        "type": "http request",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 400,
+        "y": 330,
+        "wires": [
+            [
+                "fcfc3127fddcc7bf"
+            ]
+        ]
+    },
+    {
+        "id": "b55c5f93e7179200",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "create anwb url",
+        "func": "msg.url = 'https://api.energyzero.nl/v1/energyprices';\n//msg.url = 'https://api.frankenergie.nl/energyprices';\n//msg.url = 'https://enever.nl/api/stroomprijs_vandaag.php?' ;\n//msg.url = 'https://mijn.easyenergy.com/nl/api/tariff/getapxtariffs?startTimestamp=2020-04-29T22%3A00%3A00.000Z&endTimestamp=2020-04-30T22%3A00%3A00.000Z&grouping=';\nvar offset = 0;\nmsg.delay = 0;\nvar start = new Date();\n\nif (env.get('type') == 'tomorrow') {\n    offset = 24;\n    const targetTime = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 15, 0, 0);\n    msg.delay = targetTime.getTime() - start.getTime();\n}\n\nstart.setUTCHours(0 + offset, start.getTimezoneOffset(), 0, 0);\nmsg.url += '?fromDate=' + start.toISOString();\n\nvar end = new Date();\nend.setUTCHours(23 + offset, start.getTimezoneOffset()+59, 59, 999);\nmsg.url += '&tillDate=' + end.toISOString();\n\nmsg.url += '&interval=4&usageType=1'\n\nif (env.get('inctax')) {\n    msg.url += '&inclBtw=true'\n} else {\n    msg.url += '&inclBtw=false'\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 215,
+        "y": 300,
+        "wires": [
+            [
+                "c886ac55d5917c2c",
+                "02f0120ed2119cc0"
+            ]
+        ]
+    },
+    {
+        "id": "fcfc3127fddcc7bf",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "Convert to json",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 600,
+        "y": 300,
+        "wires": [
+            [
+                "58bd9f9d17e30d86",
+                "8d2526e34599be86",
+                "c0663112fcafb18f",
+                "a7f8c248df4852d8",
+                "733971ebba20bf11"
+            ]
+        ]
+    },
+    {
+        "id": "f6ad99efaf0fecf3",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current Hour",
+        "func": "//msg.payload = {};\n\nconst d = new Date();\nlet hour = d.getHours();\n//let value = payload.average();\n\n//var msg = payload.Prices[hour].price;\nmsg.payload = msg.array[hour];\n\n\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 120,
+        "wires": [
+            [
+                "36d7ac4310663468"
+            ]
+        ]
+    },
+    {
+        "id": "58bd9f9d17e30d86",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current Price",
+        "func": "const d = new Date();\n\nvar hourOffset = 0\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload.Prices[hour].price;\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 300,
+        "wires": [
+            [
+                "2a2091214a68ad64"
+            ]
+        ]
+    },
+    {
+        "id": "8d2526e34599be86",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Next Hour",
+        "func": "const d = new Date();\n\nvar hourOffset = 1\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload.Prices[hour].price;\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 345,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c0663112fcafb18f",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "+2",
+        "func": "const d = new Date();\n\nvar hourOffset = 2\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload.Prices[hour].price;\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 390,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a7f8c248df4852d8",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "+3",
+        "func": "const d = new Date();\n\nvar hourOffset = 3\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload.Prices[hour].price;\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 435,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "733971ebba20bf11",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "+4",
+        "func": "const d = new Date();\n\nvar hourOffset = 4\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload.Prices[hour].price;\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "51a5073ee1312c54",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current Price easyenergy +3h",
+        "func": "const d = new Date();\n\nvar hourOffset = 3\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload[hour].TariffUsage; //select correct object\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 825,
+        "wires": [
+            [
+                "5dc39b779b82308a"
+            ]
+        ]
+    },
+    {
+        "id": "5dc39b779b82308a",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "0.xx",
+        "func": "msg.payload= msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 825,
+        "wires": [
+            [
+                "7052bb1982e93141"
+            ]
+        ]
+    },
+    {
+        "id": "b55e43d087cac8d4",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current Price easyenergy +4h",
+        "func": "const d = new Date();\n\nvar hourOffset = 4\nlet hour = d.getHours() + hourOffset;\n\nvar msg = msg.payload[hour].TariffUsage; //select correct object\nreturn [{payload: msg}];\n\n\n// https://energie.anwb.nl/actuele-tarieven",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 870,
+        "wires": [
+            [
+                "1c17884f4db64b1c"
+            ]
+        ]
+    },
+    {
+        "id": "1c17884f4db64b1c",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "0.xx",
+        "func": "msg.payload= msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 935,
+        "y": 870,
+        "wires": [
+            [
+                "2ee0030484d4f44b"
+            ]
+        ]
+    },
+    {
+        "id": "a370a08e1a8375de",
+        "type": "function",
+        "z": "637901a8a4b4fbe6",
+        "name": "0.xx",
+        "func": "msg.payload= msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 660,
+        "wires": [
+            [
+                "037505c47b4006a9"
+            ]
+        ]
+    },
+    {
+        "id": "037505c47b4006a9",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1060,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2fc85b95db56f961",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1055,
+        "y": 735,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "68de1cda98f33b79",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1060,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7052bb1982e93141",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1060,
+        "y": 825,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2ee0030484d4f44b",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1060,
+        "y": 870,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e6da8f069ddc6d9c",
+        "type": "debug",
+        "z": "637901a8a4b4fbe6",
+        "name": "Current hour and price",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1115,
+        "y": 165,
+        "wires": []
+    },
+    {
+        "id": "36d7ac4310663468",
+        "type": "delay",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "0.5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 890,
+        "y": 120,
+        "wires": [
+            [
+                "e6da8f069ddc6d9c"
+            ]
+        ]
+    },
+    {
+        "id": "2a2091214a68ad64",
+        "type": "delay",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "0.8",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 940,
+        "y": 240,
+        "wires": [
+            [
+                "e6da8f069ddc6d9c"
+            ]
+        ]
+    },
+    {
+        "id": "02f0120ed2119cc0",
+        "type": "axios-request",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "endpoint": "d59f7d36dff2b8af",
+        "method": "get",
+        "url": "",
+        "responseType": "arraybuffer",
+        "keepAlive": false,
+        "timeout": 30000,
+        "validateStatus": true,
+        "headers": [],
+        "params": [],
+        "x": 400,
+        "y": 270,
+        "wires": [
+            [
+                "fcfc3127fddcc7bf"
+            ]
+        ]
+    },
+    {
+        "id": "d33c022bf5825c47",
+        "type": "json",
+        "z": "637901a8a4b4fbe6",
+        "name": "Convert to json",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 640,
+        "y": 225,
+        "wires": [
+            [
+                "e6da8f069ddc6d9c"
+            ]
+        ]
+    },
+    {
+        "id": "ed3bb870c762f97c",
+        "type": "axios-request",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "endpoint": "d59f7d36dff2b8af",
+        "method": "get",
+        "url": "",
+        "responseType": "arraybuffer",
+        "keepAlive": false,
+        "timeout": 30000,
+        "validateStatus": true,
+        "headers": [],
+        "params": [],
+        "x": 355,
+        "y": 630,
+        "wires": [
+            [
+                "644625a16db6440a"
+            ]
+        ]
+    },
+    {
+        "id": "d877739cde3cb393",
+        "type": "comment",
+        "z": "637901a8a4b4fbe6",
+        "name": "request node is broken in node-red 4.0",
+        "info": "",
+        "x": 405,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "68eca1462f415452",
+        "type": "comment",
+        "z": "637901a8a4b4fbe6",
+        "name": "use axios node: node-red 4.0",
+        "info": "",
+        "x": 390,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2a2e0a7b8b4ebc52",
+        "type": "tls-config",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "14b807e09f5642ea",
+        "type": "tls-config",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "d59f7d36dff2b8af",
+        "type": "axios-endpoint",
+        "z": "637901a8a4b4fbe6",
+        "name": "",
+        "baseURL": "https://",
+        "caCertPath": "",
+        "rejectUnauthorized": true,
+        "proxyEnabled": false,
+        "proxyProtocol": "https",
+        "proxyHost": "",
+        "proxyPort": ""
+    },
+    {
+        "id": "bac63429756311aa",
+        "type": "subflow",
+        "name": "stat",
+        "info": "",
+        "category": "",
+        "in": [],
+        "out": [
+            {
+                "x": 695,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "318689a962ec2204",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 695,
+                "y": 180,
+                "wires": [
+                    {
+                        "id": "8f1775309352e7ae",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 695,
+                "y": 240,
+                "wires": [
+                    {
+                        "id": "04a15fdbd0136154",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 695,
+                "y": 285,
+                "wires": [
+                    {
+                        "id": "1cc6401f578fa83b",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 695,
+                "y": 345,
+                "wires": [
+                    {
+                        "id": "acdd35612d35d774",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#ffccff",
+        "icon": "node-red/db.svg",
+        "status": {
+            "x": 685,
+            "y": 570,
+            "wires": [
+                {
+                    "id": "0a848e3969fce286",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "6acf84c0f876edc4",
+        "type": "comment",
+        "z": "bac63429756311aa",
+        "name": "Status stored parameter",
+        "info": "",
+        "x": 265,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "318689a962ec2204",
+        "type": "function",
+        "z": "bac63429756311aa",
+        "name": "InverterPower",
+        "func": " msg.payload = global.get(\"InverterPower\");\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 575,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8f1775309352e7ae",
+        "type": "function",
+        "z": "bac63429756311aa",
+        "name": "Marge",
+        "func": "msg.payload = global.get(\"Marge\");\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 545,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "04a15fdbd0136154",
+        "type": "function",
+        "z": "bac63429756311aa",
+        "name": "CurrentPrice",
+        "func": "//msg.payload = global.get(\"CurrentPrice\");\nmsg.payload = global.get(\"PriceTrigger\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 565,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1cc6401f578fa83b",
+        "type": "function",
+        "z": "bac63429756311aa",
+        "name": "PriceLimit",
+        "func": "msg.payload = global.get(\"PriceLimit\");\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 555,
+        "y": 285,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "64f0a14b065d2a8b",
+        "type": "inject",
+        "z": "bac63429756311aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 295,
+        "y": 180,
+        "wires": [
+            [
+                "318689a962ec2204",
+                "8f1775309352e7ae",
+                "04a15fdbd0136154",
+                "1cc6401f578fa83b",
+                "0a848e3969fce286",
+                "acdd35612d35d774"
+            ]
+        ]
+    },
+    {
+        "id": "0a848e3969fce286",
+        "type": "trigger",
+        "z": "bac63429756311aa",
+        "name": "",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "250",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 505,
+        "y": 570,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "acdd35612d35d774",
+        "type": "function",
+        "z": "bac63429756311aa",
+        "name": "PowerLimit",
+        "func": "msg.payload = global.get(\"PowerLimit\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 565,
+        "y": 345,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3c802b03f163fdb6",
+        "type": "subflow",
+        "name": "Price Limiter (UI2.0)",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 85,
+                "y": 165,
+                "wires": [
+                    {
+                        "id": "e2eb5a6a162dd847"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1335,
+                "y": 300,
+                "wires": [
+                    {
+                        "id": "667b815fd2dd777a",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1335,
+                "y": 435,
+                "wires": [
+                    {
+                        "id": "8a56deef0891663b",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#00ff99",
+        "inputLabels": [
+            "Current Price Input"
+        ],
+        "outputLabels": [
+            "Output 5 or 100% ",
+            "Output PriceLimit"
+        ],
+        "icon": "node-red-dashboard/ui_slider.png",
+        "status": {
+            "x": 740,
+            "y": 405,
+            "wires": [
+                {
+                    "id": "a02621c670c20209",
+                    "port": 0
+                },
+                {
+                    "id": "4022af114da39b5c",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "e2eb5a6a162dd847",
+        "type": "change",
+        "z": "3c802b03f163fdb6",
+        "name": "CurrentPrice",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "CurrentPrice",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 165,
+        "wires": [
+            [
+                "8a56deef0891663b"
+            ]
+        ]
+    },
+    {
+        "id": "8a56deef0891663b",
+        "type": "Comparator",
+        "z": "3c802b03f163fdb6",
+        "name": "Comparator",
+        "property": "payload",
+        "math": "<=",
+        "topic1": "CurrentPrice",
+        "topic2": "PriceLimit",
+        "x": 965,
+        "y": 210,
+        "wires": [
+            [
+                "667b815fd2dd777a",
+                "e75272d6f105655c"
+            ]
+        ]
+    },
+    {
+        "id": "bb0b3c7a45bb1103",
+        "type": "inject",
+        "z": "3c802b03f163fdb6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "payload": "PriceLimit",
+        "payloadType": "global",
+        "x": 165,
+        "y": 300,
+        "wires": [
+            [
+                "a02621c670c20209",
+                "4022af114da39b5c"
+            ]
+        ]
+    },
+    {
+        "id": "667b815fd2dd777a",
+        "type": "function",
+        "z": "3c802b03f163fdb6",
+        "name": "Power Limit 0 or 100 %",
+        "func": "var compare = msg.payload ;\n\nswitch(compare) {\n  case true:\n    var Limfactor = 5\n    break;\n  case false:\n    var Limfactor = 100\n    break;\n  default:\n    var Limfactor = 100\n}\n\n\n\nreturn [{ payload: Limfactor }];\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1205,
+        "y": 210,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4c29e8b47dd9da0c",
+        "type": "change",
+        "z": "3c802b03f163fdb6",
+        "name": "Last",
+        "rules": [
+            {
+                "t": "set",
+                "p": "PriceLimit",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 465,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4022af114da39b5c",
+        "type": "ui-slider",
+        "z": "3c802b03f163fdb6",
+        "group": "1f577f21a19951f0",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "order": 13,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "end",
+        "topic": "PriceLimit",
+        "topicType": "str",
+        "thumbLabel": "always",
+        "showTicks": "false",
+        "min": "-0.75",
+        "max": "0.75",
+        "step": "0.01",
+        "color": "",
+        "colorTrack": "",
+        "colorThumb": "",
+        "className": "",
+        "x": 350,
+        "y": 405,
+        "wires": [
+            [
+                "4c29e8b47dd9da0c",
+                "a02621c670c20209"
+            ]
+        ]
+    },
+    {
+        "id": "7a26839716b89a74",
+        "type": "inject",
+        "z": "3c802b03f163fdb6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "CurrentPrice",
+        "payloadType": "global",
+        "x": 190,
+        "y": 45,
+        "wires": [
+            [
+                "e2eb5a6a162dd847"
+            ]
+        ]
+    },
+    {
+        "id": "a02621c670c20209",
+        "type": "function",
+        "z": "3c802b03f163fdb6",
+        "name": "Start value after deploy",
+        "func": "var limit = global.get(\"PriceLimit\");\n\nreturn [{payload: limit}];\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 565,
+        "y": 300,
+        "wires": [
+            [
+                "285447cbcf0ed590"
+            ]
+        ]
+    },
+    {
+        "id": "285447cbcf0ed590",
+        "type": "change",
+        "z": "3c802b03f163fdb6",
+        "name": "PriceLimit",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "PriceLimit",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 300,
+        "wires": [
+            [
+                "8a56deef0891663b"
+            ]
+        ]
+    },
+    {
+        "id": "e75272d6f105655c",
+        "type": "function",
+        "z": "3c802b03f163fdb6",
+        "name": "Store PriceTrigger State",
+        "func": "global.set(\"PriceTrigger\",msg.payload) ;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1075,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cf0bcfd518fd824e",
+        "type": "subflow",
+        "name": "Stored Inverter Power",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 280,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "4106c7fd6b24e46a"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [],
+        "meta": {},
+        "color": "#ffff00",
+        "icon": "node-red/cog.svg",
+        "status": {
+            "x": 540,
+            "y": 100,
+            "wires": [
+                {
+                    "id": "cf0bcfd518fd824e",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "4106c7fd6b24e46a",
+        "type": "function",
+        "z": "cf0bcfd518fd824e",
+        "name": "Store Inverter Power",
+        "func": "global.set(\"InverterPower\",msg.payload) ;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0506df87e355fc0a",
+        "type": "function",
+        "z": "cf0bcfd518fd824e",
+        "name": "Read Stored Power from storage",
+        "func": "var InvPwr = global.get(\"InverterPower\");\nmsg.payload = InvPwr;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 340,
+        "wires": [
+            [
+                "53e5903c0ef6fe70"
+            ]
+        ]
+    },
+    {
+        "id": "53e5903c0ef6fe70",
+        "type": "debug",
+        "z": "cf0bcfd518fd824e",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "cf03840711762fcd",
+        "type": "inject",
+        "z": "cf0bcfd518fd824e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "InverterPower",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 340,
+        "wires": [
+            [
+                "0506df87e355fc0a"
+            ]
+        ]
+    },
+    {
+        "id": "eef49cec60198b38",
+        "type": "subflow",
+        "name": "Power Limiter (UI2.0)",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 100,
+                "y": 220,
+                "wires": [
+                    {
+                        "id": "35a7b1de17bed1c7"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1105,
+                "y": 220,
+                "wires": [
+                    {
+                        "id": "ef02b1d144dd7a60",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1105,
+                "y": 280,
+                "wires": [
+                    {
+                        "id": "b64ad6704e5292a9",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#00ff99",
+        "inputLabels": [
+            "Actual use input"
+        ],
+        "outputLabels": [
+            "Output 0 - 100%",
+            "Output in Watt"
+        ],
+        "icon": "node-red-dashboard/ui_slider.png"
+    },
+    {
+        "id": "35a7b1de17bed1c7",
+        "type": "function",
+        "z": "eef49cec60198b38",
+        "name": "Power limit factor",
+        "func": "//var Marge = 400 ;\n//var Limfactor = (msg.payload + Marge) / 5000 ;\nvar factor = global.get(\"InverterPower\");\nvar Limfactor = (msg.payload) / factor ; // 5000;\nreturn [{ payload: Limfactor }];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 295,
+        "y": 220,
+        "wires": [
+            [
+                "458591ea364df796"
+            ]
+        ]
+    },
+    {
+        "id": "b46bf6acb14bb256",
+        "type": "function",
+        "z": "eef49cec60198b38",
+        "name": "* 100",
+        "func": "var lim = msg.payload *100 ;\nvar limit = Math.ceil(lim) ; \nreturn [{payload: limit}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 220,
+        "wires": [
+            [
+                "ef02b1d144dd7a60"
+            ]
+        ]
+    },
+    {
+        "id": "458591ea364df796",
+        "type": "function",
+        "z": "eef49cec60198b38",
+        "name": "abs",
+        "func": "var abs = Math.abs(msg.payload);\n\nreturn [{ payload: abs }]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 455,
+        "y": 220,
+        "wires": [
+            [
+                "b46bf6acb14bb256"
+            ]
+        ]
+    },
+    {
+        "id": "ef02b1d144dd7a60",
+        "type": "function",
+        "z": "eef49cec60198b38",
+        "name": "range (min-max)",
+        "func": "var min = 0 ;\nvar max = 100 ;\n\nvar limit = msg.payload ;\n\nif (limit > max) {\n    limit = max;\n} else if (limit < min) {\n    limit = min;\n} \n\n\nreturn[{payload:limit}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 725,
+        "y": 220,
+        "wires": [
+            [
+                "b64ad6704e5292a9",
+                "b81753426b1357c7"
+            ]
+        ]
+    },
+    {
+        "id": "b64ad6704e5292a9",
+        "type": "function",
+        "z": "eef49cec60198b38",
+        "name": "limit W",
+        "func": "var factor = global.get(\"InverterPower\") / 100 ;\nvar lim = msg.payload * factor ; //50; // factor for 5kW  inverter\nreturn [{ payload: lim }];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 915,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b81753426b1357c7",
+        "type": "function",
+        "z": "eef49cec60198b38",
+        "name": "Store PowerLitmit [%]",
+        "func": "global.set(\"PowerLimit\",msg.payload) ;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 939.8511962890625,
+        "y": 98.4126968383789,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d05ee1cf0cde18fb",
+        "type": "tab",
+        "label": "SMA Tripower 5.0 (UI2.0)",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "87c2b124f6d74379",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "",
+        "style": {
+            "fill": "#ffefbf",
+            "label": true
+        },
+        "nodes": [
+            "c449100c00235373",
+            "b9e5aee4ce9d4edf",
+            "3bd69de0bbb1ecca"
+        ],
+        "x": 14,
+        "y": 34,
+        "w": 717,
+        "h": 262
+    },
+    {
+        "id": "d4b6c5d96178199d",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "0042d04620decb40",
+            "50e28540de73b8da",
+            "4a64ecb899f52f16",
+            "1bf79a63ec06711e",
+            "acf6da2be67649d0",
+            "2b5308d404f721cb",
+            "943c5d388e573baa",
+            "39ccc54c8b7cb5fe",
+            "1483ebee0d510271",
+            "2d1f418021f66274",
+            "2c7cb56710a55461",
+            "cab2ea373352a433",
+            "b19736f0c8bd39ef"
+        ],
+        "x": 159,
+        "y": 1024,
+        "w": 1097,
+        "h": 352
+    },
+    {
+        "id": "12f2e402136817ed",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "620f78d97650bd46",
+            "dcdc9448c70005b1",
+            "b4896e8b0972e585",
+            "9864caa8d5d6400d",
+            "29ae365cabc8747a",
+            "76c674ebbc15e59f",
+            "ca1b38ec208b0c87",
+            "73eaf40aba9aa205",
+            "5757f26572b4cc93",
+            "e16aaaf1b788f9f7",
+            "a6d527e30a77ea98",
+            "42d2cd2363f70fa7"
+        ],
+        "x": 1324,
+        "y": 754,
+        "w": 857,
+        "h": 412
+    },
+    {
+        "id": "853901e604ced968",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "046f8e7bc45b274e",
+            "14de93873d836e48",
+            "4f0bcdebde48fd82",
+            "1f409c04b106f620",
+            "c72f0dc2af9203d7",
+            "752e0a0b0e67bc18",
+            "70facafcfd819c3a",
+            "55bb7bf0e683bcf6",
+            "45cce42b47a0294c",
+            "ad0326cb9276bfc7",
+            "e358f31104675d1e",
+            "a3d6f0891d576c61",
+            "49acb4d57b9e36d1",
+            "6ccf7627e3adcc53",
+            "1acc6ff36d9e38c5"
+        ],
+        "x": 164,
+        "y": 709,
+        "w": 1092,
+        "h": 277
+    },
+    {
+        "id": "6910a721521b3245",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "f380a82ab7ab7f52",
+            "d03026dc2a79812c",
+            "d75a82f0661149b1",
+            "040642add73fb136",
+            "2f0abdd95253c9a4",
+            "2114e670e58b800b",
+            "966169fdce5476cb",
+            "d0990d5b2a590de8",
+            "2bdf20f6d32bbede",
+            "465cf70a7b58927c",
+            "156a87d4fe926f31",
+            "f66bc806c525d577",
+            "1cb6b8aff40331e9",
+            "3a4fb501f195a80c",
+            "7e9e31f8a0a653da"
+        ],
+        "x": 13,
+        "y": 308,
+        "w": 1813,
+        "h": 323
+    },
+    {
+        "id": "0806bf976ba9fedf",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "Reading the Inverter limitation register",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "276f8180dfe2b621",
+            "830d8d05b9fe71a4",
+            "4693ad36a83484ec",
+            "f5add807dc8b7d84",
+            "1ad612404488e0cd",
+            "c4287215b1d8e67f",
+            "dcdba461506867cf",
+            "6ed80439f82a056f",
+            "8133dbc7569ac1f2",
+            "4b4a4bcfc7655cb9",
+            "054ed12d3c7963dc",
+            "0196554b4827127d"
+        ],
+        "x": 749,
+        "y": 34,
+        "w": 1032,
+        "h": 262
+    },
+    {
+        "id": "66b4693c2e5a4017",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "",
+        "style": {
+            "fill": "#92d04f",
+            "label": true
+        },
+        "nodes": [
+            "55ab2af00cbcfaca"
+        ],
+        "x": 1939,
+        "y": 34,
+        "w": 232,
+        "h": 82
+    },
+    {
+        "id": "a678bc53679ed1ba",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "name": "Read Status global variables (Context Data)",
+        "style": {
+            "label": true,
+            "fill": "#ffccff",
+            "color": "#000000"
+        },
+        "nodes": [
+            "926d80176c03d030",
+            "173c21bbf99efadf",
+            "a1efe0fed52f8698",
+            "1969836b9c0b8e92",
+            "d57e8cb54763545d",
+            "6679c7fbf0576d23"
+        ],
+        "x": 1324,
+        "y": 1204,
+        "w": 457,
+        "h": 172
+    },
+    {
+        "id": "f66bc806c525d577",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "enable injects for testing offline",
+        "style": {
+            "fill": "#dbcbe7",
+            "label": true
+        },
+        "nodes": [
+            "c8c288ad0b8a61b3",
+            "cf848a505dc2535f",
+            "3c166dcd6e231df8"
+        ],
+        "x": 514,
+        "y": 334,
+        "w": 252,
+        "h": 172
+    },
+    {
+        "id": "1cb6b8aff40331e9",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "Input from other flow (dyn pwr ctr)",
+        "style": {
+            "fill": "#ffdf7f",
+            "label": true
+        },
+        "nodes": [
+            "402f56ab1c15ba33",
+            "eac510d0cd836ec3"
+        ],
+        "x": 39,
+        "y": 499,
+        "w": 232,
+        "h": 82
+    },
+    {
+        "id": "3a4fb501f195a80c",
+        "type": "group",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "Solar input other flow (Optional)",
+        "style": {
+            "fill": "#ffdf7f",
+            "label": true
+        },
+        "nodes": [
+            "04534bf38d6cae89",
+            "521dcacf1e9e369f"
+        ],
+        "x": 39,
+        "y": 379,
+        "w": 232,
+        "h": 82
+    },
+    {
+        "id": "6ed80439f82a056f",
+        "type": "inject",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 865,
+        "y": 150,
+        "wires": [
+            [
+                "c4287215b1d8e67f",
+                "4b4a4bcfc7655cb9",
+                "8133dbc7569ac1f2"
+            ]
+        ]
+    },
+    {
+        "id": "c4287215b1d8e67f",
+        "type": "modbus-getter",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "SMA Modbus (41255) Power",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "41255",
+        "quantity": "2",
+        "server": "720661e550c2de19",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1125,
+        "y": 150,
+        "wires": [
+            [
+                "830d8d05b9fe71a4",
+                "f5add807dc8b7d84"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "276f8180dfe2b621",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "group": "1f577f21a19951f0",
+        "order": 6,
+        "width": 4,
+        "height": 1,
+        "name": "Power limit %",
+        "label": "SMA Power Limit",
+        "format": "{{msg.payload}} %",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#000000",
+        "className": "",
+        "x": 1675,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "830d8d05b9fe71a4",
+        "type": "function",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "Power Limit",
+        "func": "var limit = msg.payload[0] /100;\n\n\n\nreturn [{ payload: limit }]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1445,
+        "y": 120,
+        "wires": [
+            [
+                "276f8180dfe2b621",
+                "1ad612404488e0cd"
+            ]
+        ]
+    },
+    {
+        "id": "620f78d97650bd46",
+        "type": "ui-slider",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "group": "1f577f21a19951f0",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "order": 8,
+        "width": 4,
+        "height": 1,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "thumbLabel": "always",
+        "showTicks": "false",
+        "min": "5",
+        "max": "100",
+        "step": "5",
+        "color": "",
+        "colorTrack": "",
+        "colorThumb": "",
+        "className": "",
+        "x": 1570,
+        "y": 885,
+        "wires": [
+            [
+                "dcdc9448c70005b1",
+                "b4896e8b0972e585",
+                "9a4fc1d46f7db5c0"
+            ]
+        ]
+    },
+    {
+        "id": "4693ad36a83484ec",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "group": "1f577f21a19951f0",
+        "order": 7,
+        "width": 2,
+        "height": 1,
+        "name": "W",
+        "label": "",
+        "format": "{{msg.payload}} W",
+        "layout": "row-right",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#000000",
+        "className": "",
+        "x": 1705,
+        "y": 165,
+        "wires": []
+    },
+    {
+        "id": "f5add807dc8b7d84",
+        "type": "function",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "Power Limit % to W , sma 5kW",
+        "func": "var factor = global.get(\"InverterPower\") /10000 ;\n\nvar pro = msg.payload[0] * factor ; // 0.5; // factor 0.5 for 5kW  inverter\n\n\n\nreturn [{ payload: pro }]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1465,
+        "y": 165,
+        "wires": [
+            [
+                "4693ad36a83484ec",
+                "d75a82f0661149b1"
+            ]
+        ]
+    },
+    {
+        "id": "dcdc9448c70005b1",
+        "type": "function",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "* 100",
+        "func": "var lim = msg.payload *100;\nreturn [{payload: lim}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1715,
+        "y": 885,
+        "wires": [
+            [
+                "ca1b38ec208b0c87",
+                "5757f26572b4cc93",
+                "e16aaaf1b788f9f7"
+            ]
+        ]
+    },
+    {
+        "id": "b4896e8b0972e585",
+        "type": "function",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "% to Watt , sma 5kW",
+        "func": "var factor = global.get(\"InverterPower\") / 100 ;\nvar lim = msg.payload * factor ; //50; // factor for 5kW  inverter\nreturn [{payload: lim}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1715,
+        "y": 1095,
+        "wires": [
+            [
+                "a6d527e30a77ea98",
+                "42d2cd2363f70fa7"
+            ]
+        ]
+    },
+    {
+        "id": "9864caa8d5d6400d",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "group": "1f577f21a19951f0",
+        "order": 9,
+        "width": 2,
+        "height": 1,
+        "name": "set:",
+        "label": "",
+        "format": "{{msg.payload}} W",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#19e119",
+        "className": "",
+        "x": 2005,
+        "y": 1065,
+        "wires": []
+    },
+    {
+        "id": "dcdba461506867cf",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "Read Modbus values",
+        "info": "",
+        "x": 1135,
+        "y": 90,
+        "wires": []
+    },
+    {
+        "id": "29ae365cabc8747a",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "Write Modbus Register",
+        "info": "",
+        "x": 1945,
+        "y": 825,
+        "wires": []
+    },
+    {
+        "id": "046f8e7bc45b274e",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Dynamic Power Control ",
+        "info": "",
+        "x": 680,
+        "y": 750,
+        "wires": []
+    },
+    {
+        "id": "eac510d0cd836ec3",
+        "type": "link in",
+        "z": "d05ee1cf0cde18fb",
+        "g": "1cb6b8aff40331e9",
+        "name": "actual use in 1",
+        "links": [
+            "b792982110625bd6"
+        ],
+        "x": 230,
+        "y": 540,
+        "wires": [
+            [
+                "2f0abdd95253c9a4",
+                "e358f31104675d1e"
+            ]
+        ]
+    },
+    {
+        "id": "402f56ab1c15ba33",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "1cb6b8aff40331e9",
+        "name": "actual use in",
+        "info": "actual use in: Use your own payload",
+        "x": 135,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "f380a82ab7ab7f52",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "group": "1f577f21a19951f0",
+        "order": 3,
+        "width": 6,
+        "height": 1,
+        "name": "Actual",
+        "label": "Actual Use",
+        "format": "{{msg.payload}} W",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#0a95eb",
+        "className": "",
+        "x": 1250,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "14de93873d836e48",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "group": "1f577f21a19951f0",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "name": "Dynamic Limit",
+        "label": "Calc. Dynamic Limit",
+        "format": "{{msg.payload}} %",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#e4b611",
+        "className": "",
+        "x": 1120,
+        "y": 870,
+        "wires": []
+    },
+    {
+        "id": "76c674ebbc15e59f",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "Manual Power Limit Slider",
+        "info": "",
+        "x": 1625,
+        "y": 795,
+        "wires": []
+    },
+    {
+        "id": "73eaf40aba9aa205",
+        "type": "inject",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "Daily reset to 100%",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 00 * * *",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "100",
+        "payloadType": "num",
+        "x": 1470,
+        "y": 1095,
+        "wires": [
+            [
+                "620f78d97650bd46"
+            ]
+        ]
+    },
+    {
+        "id": "4f0bcdebde48fd82",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "group": "1f577f21a19951f0",
+        "order": 5,
+        "width": 2,
+        "height": 1,
+        "name": "W",
+        "label": "",
+        "format": "{{msg.payload}} W",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#ffcb13",
+        "className": "",
+        "x": 1085,
+        "y": 915,
+        "wires": []
+    },
+    {
+        "id": "d03026dc2a79812c",
+        "type": "ui_chart",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "6910a721521b3245",
+        "name": "",
+        "group": "1f577f21a19951f0",
+        "order": 1,
+        "width": 6,
+        "height": 5,
+        "label": "SMA Tripower 5.0",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": "20",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#21a1de",
+            "#19e119",
+            "#ffcb13",
+            "#ff7d0f",
+            "#98df8a",
+            "#c3f05a",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1665,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d75a82f0661149b1",
+        "type": "change",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "6910a721521b3245",
+        "name": "Powerlimit",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "P-Limit",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1270,
+        "y": 480,
+        "wires": [
+            [
+                "d03026dc2a79812c"
+            ]
+        ]
+    },
+    {
+        "id": "040642add73fb136",
+        "type": "change",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "Actual Use",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Act. Use",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1265,
+        "y": 540,
+        "wires": [
+            [
+                "d0990d5b2a590de8"
+            ]
+        ]
+    },
+    {
+        "id": "2f0abdd95253c9a4",
+        "type": "function",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "Actual use",
+        "func": "\nvar Actual = msg.payload ;\nreturn [{ payload: Actual }];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1065,
+        "y": 540,
+        "wires": [
+            [
+                "040642add73fb136",
+                "f380a82ab7ab7f52"
+            ]
+        ]
+    },
+    {
+        "id": "1f409c04b106f620",
+        "type": "change",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Marge",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Marge",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 885,
+        "wires": [
+            [
+                "c72f0dc2af9203d7",
+                "49acb4d57b9e36d1"
+            ]
+        ]
+    },
+    {
+        "id": "c72f0dc2af9203d7",
+        "type": "SumUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "actual",
+        "property": "payload",
+        "math": "sum",
+        "x": 680,
+        "y": 860,
+        "wires": [
+            [
+                "55bb7bf0e683bcf6"
+            ]
+        ]
+    },
+    {
+        "id": "752e0a0b0e67bc18",
+        "type": "inject",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Last Used",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 00 * * *",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "",
+        "payload": "Marge",
+        "payloadType": "global",
+        "x": 280,
+        "y": 885,
+        "wires": [
+            [
+                "1f409c04b106f620",
+                "1acc6ff36d9e38c5",
+                "70facafcfd819c3a"
+            ]
+        ]
+    },
+    {
+        "id": "2114e670e58b800b",
+        "type": "change",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "6910a721521b3245",
+        "name": "Calc. Limit",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Calc. Lim.",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1270,
+        "y": 590,
+        "wires": [
+            [
+                "2bdf20f6d32bbede"
+            ]
+        ]
+    },
+    {
+        "id": "70facafcfd819c3a",
+        "type": "change",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "last",
+        "rules": [
+            {
+                "t": "set",
+                "p": "Marge",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 535,
+        "y": 945,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "04534bf38d6cae89",
+        "type": "link in",
+        "z": "d05ee1cf0cde18fb",
+        "g": "3a4fb501f195a80c",
+        "name": "AC solar pwr",
+        "links": [
+            "b07ce420a9bbb0b2"
+        ],
+        "x": 230,
+        "y": 420,
+        "wires": [
+            [
+                "966169fdce5476cb"
+            ]
+        ]
+    },
+    {
+        "id": "521dcacf1e9e369f",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "3a4fb501f195a80c",
+        "name": "Solar power in",
+        "info": "",
+        "x": 135,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "966169fdce5476cb",
+        "type": "change",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "Ac power",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Solar Pwr",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1260,
+        "y": 420,
+        "wires": [
+            [
+                "465cf70a7b58927c",
+                "156a87d4fe926f31"
+            ]
+        ]
+    },
+    {
+        "id": "d0990d5b2a590de8",
+        "type": "delay",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "6",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "2",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1440,
+        "y": 540,
+        "wires": [
+            [
+                "d03026dc2a79812c",
+                "7e9e31f8a0a653da"
+            ]
+        ]
+    },
+    {
+        "id": "2bdf20f6d32bbede",
+        "type": "delay",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "6910a721521b3245",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "6",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "3",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1440,
+        "y": 590,
+        "wires": [
+            [
+                "d03026dc2a79812c",
+                "7e9e31f8a0a653da"
+            ]
+        ]
+    },
+    {
+        "id": "465cf70a7b58927c",
+        "type": "delay",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "6",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1430,
+        "y": 420,
+        "wires": [
+            [
+                "d03026dc2a79812c",
+                "7e9e31f8a0a653da"
+            ]
+        ]
+    },
+    {
+        "id": "0042d04620decb40",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "Dynamic Price Control",
+        "info": "",
+        "x": 610,
+        "y": 1065,
+        "wires": []
+    },
+    {
+        "id": "50e28540de73b8da",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "group": "1f577f21a19951f0",
+        "order": 14,
+        "width": 6,
+        "height": 1,
+        "name": "Current Price",
+        "label": "Current Price",
+        "format": "{{msg.payload}} euro",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#000000",
+        "className": "",
+        "x": 755,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "4a64ecb899f52f16",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "group": "1f577f21a19951f0",
+        "order": 15,
+        "width": 6,
+        "height": 1,
+        "name": "Next hour",
+        "label": "Next hour",
+        "format": "{{msg.payload}} euro",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#000000",
+        "className": "",
+        "x": 750,
+        "y": 1245,
+        "wires": []
+    },
+    {
+        "id": "55bb7bf0e683bcf6",
+        "type": "subflow:eef49cec60198b38",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "",
+        "x": 870,
+        "y": 860,
+        "wires": [
+            [
+                "14de93873d836e48",
+                "45cce42b47a0294c"
+            ],
+            [
+                "4f0bcdebde48fd82",
+                "2114e670e58b800b"
+            ]
+        ]
+    },
+    {
+        "id": "3c166dcd6e231df8",
+        "type": "inject",
+        "z": "d05ee1cf0cde18fb",
+        "g": "f66bc806c525d577",
+        "name": "test actual use in",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "3222",
+        "payloadType": "num",
+        "x": 650,
+        "y": 465,
+        "wires": [
+            [
+                "2f0abdd95253c9a4",
+                "e358f31104675d1e"
+            ]
+        ],
+        "icon": "font-awesome/fa-wrench"
+    },
+    {
+        "id": "c8c288ad0b8a61b3",
+        "type": "inject",
+        "z": "d05ee1cf0cde18fb",
+        "g": "f66bc806c525d577",
+        "name": "test solar in",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "4550",
+        "payloadType": "num",
+        "x": 640,
+        "y": 375,
+        "wires": [
+            [
+                "966169fdce5476cb"
+            ]
+        ],
+        "icon": "font-awesome/fa-wrench"
+    },
+    {
+        "id": "cf848a505dc2535f",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "f66bc806c525d577",
+        "name": "TESTING VALUES",
+        "info": "",
+        "x": 635,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c449100c00235373",
+        "type": "inject",
+        "z": "d05ee1cf0cde18fb",
+        "g": "87c2b124f6d74379",
+        "name": "Set Inverter Power Here [Watt], (Sum of all inverters)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.5",
+        "topic": "",
+        "payload": "5000",
+        "payloadType": "num",
+        "x": 260,
+        "y": 135,
+        "wires": [
+            [
+                "b9e5aee4ce9d4edf"
+            ]
+        ],
+        "icon": "node-red/cog.svg"
+    },
+    {
+        "id": "b9e5aee4ce9d4edf",
+        "type": "subflow:cf0bcfd518fd824e",
+        "z": "d05ee1cf0cde18fb",
+        "g": "87c2b124f6d74379",
+        "name": "",
+        "x": 605,
+        "y": 255,
+        "wires": []
+    },
+    {
+        "id": "3bd69de0bbb1ecca",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "87c2b124f6d74379",
+        "name": "CONFIGURE: TOTAL INVERTER POWER",
+        "info": "",
+        "x": 230,
+        "y": 75,
+        "wires": []
+    },
+    {
+        "id": "156a87d4fe926f31",
+        "type": "ui-text",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "group": "1f577f21a19951f0",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Solar Power",
+        "format": "{{msg.payload}} W",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": "12",
+        "color": "#19e119",
+        "className": "",
+        "x": 1430,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "1bf79a63ec06711e",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "Status",
+        "property": "payload",
+        "x": 945,
+        "y": 1170,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "45cce42b47a0294c",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Status",
+        "property": "payload",
+        "x": 885,
+        "y": 750,
+        "wires": [
+            [
+                "6ccf7627e3adcc53"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "acf6da2be67649d0",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "Status",
+        "property": "payload",
+        "x": 1215,
+        "y": 1080,
+        "wires": [
+            [
+                "620f78d97650bd46"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "ad0326cb9276bfc7",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Status",
+        "property": "payload",
+        "x": 1215,
+        "y": 750,
+        "wires": [
+            [
+                "620f78d97650bd46"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "1ad612404488e0cd",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "Status",
+        "property": "payload",
+        "x": 1560,
+        "y": 75,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "ca1b38ec208b0c87",
+        "type": "modbus-write",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "SMA Modbus Write 40023 ( Limit )",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "40023",
+        "quantity": "1",
+        "server": "720661e550c2de19",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1955,
+        "y": 885,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "55ab2af00cbcfaca",
+        "type": "comment",
+        "z": "d05ee1cf0cde18fb",
+        "g": "66b4693c2e5a4017",
+        "name": "Version 0.8.4 (UI2.0)",
+        "info": "work around for node-red issue:\n\nhttp request node gives errors after update to 4.01 and 4.02 #4826",
+        "x": 2055,
+        "y": 75,
+        "wires": []
+    },
+    {
+        "id": "e358f31104675d1e",
+        "type": "change",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Actual Use",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Act. Use",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 825,
+        "wires": [
+            [
+                "c72f0dc2af9203d7",
+                "a3d6f0891d576c61"
+            ]
+        ]
+    },
+    {
+        "id": "2b5308d404f721cb",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "Status",
+        "property": "payload",
+        "x": 900,
+        "y": 1080,
+        "wires": [
+            [
+                "b19736f0c8bd39ef"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "943c5d388e573baa",
+        "type": "subflow:3c802b03f163fdb6",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "",
+        "x": 770,
+        "y": 1140,
+        "wires": [
+            [
+                "2b5308d404f721cb"
+            ],
+            [
+                "1bf79a63ec06711e"
+            ]
+        ]
+    },
+    {
+        "id": "926d80176c03d030",
+        "type": "subflow:bac63429756311aa",
+        "z": "d05ee1cf0cde18fb",
+        "g": "a678bc53679ed1ba",
+        "name": "",
+        "x": 1400,
+        "y": 1275,
+        "wires": [
+            [
+                "173c21bbf99efadf"
+            ],
+            [
+                "a1efe0fed52f8698"
+            ],
+            [
+                "1969836b9c0b8e92"
+            ],
+            [
+                "d57e8cb54763545d"
+            ],
+            [
+                "6679c7fbf0576d23"
+            ]
+        ]
+    },
+    {
+        "id": "173c21bbf99efadf",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "a678bc53679ed1ba",
+        "name": "InverterPower",
+        "property": "payload",
+        "x": 1550,
+        "y": 1245,
+        "wires": [
+            []
+        ],
+        "icon": "node-red/leveldb.svg"
+    },
+    {
+        "id": "a1efe0fed52f8698",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "a678bc53679ed1ba",
+        "name": "Marge",
+        "property": "payload",
+        "x": 1690,
+        "y": 1245,
+        "wires": [
+            []
+        ],
+        "icon": "node-red/leveldb.svg"
+    },
+    {
+        "id": "1969836b9c0b8e92",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "a678bc53679ed1ba",
+        "name": "PriceTrigger",
+        "property": "payload",
+        "x": 1540,
+        "y": 1290,
+        "wires": [
+            []
+        ],
+        "icon": "node-red/leveldb.svg"
+    },
+    {
+        "id": "d57e8cb54763545d",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "a678bc53679ed1ba",
+        "name": "PriceLimit",
+        "property": "payload",
+        "x": 1695,
+        "y": 1290,
+        "wires": [
+            []
+        ],
+        "icon": "node-red/leveldb.svg"
+    },
+    {
+        "id": "a3d6f0891d576c61",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Status",
+        "property": "payload",
+        "x": 655,
+        "y": 795,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "49acb4d57b9e36d1",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "Status",
+        "property": "payload",
+        "x": 655,
+        "y": 930,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "5757f26572b4cc93",
+        "type": "modbus-write",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "12f2e402136817ed",
+        "name": "SMA Modbus Write 40023 ( Limit ) inverter 2",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "40023",
+        "quantity": "1",
+        "server": "720661e550c2de19",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1985,
+        "y": 945,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e16aaaf1b788f9f7",
+        "type": "modbus-write",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "12f2e402136817ed",
+        "name": "SMA Modbus Write 40023 ( Limit ) inverter 3",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "40023",
+        "quantity": "1",
+        "server": "720661e550c2de19",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1985,
+        "y": 1005,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "8133dbc7569ac1f2",
+        "type": "modbus-getter",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "0806bf976ba9fedf",
+        "name": "SMA Modbus (41255) Power, Inverter 3",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "41255",
+        "quantity": "2",
+        "server": "720661e550c2de19",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1145,
+        "y": 255,
+        "wires": [
+            [
+                "0196554b4827127d"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "4b4a4bcfc7655cb9",
+        "type": "modbus-getter",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "0806bf976ba9fedf",
+        "name": "SMA Modbus (41255) Power, Inverter 2",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "41255",
+        "quantity": "2",
+        "server": "720661e550c2de19",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1145,
+        "y": 210,
+        "wires": [
+            [
+                "054ed12d3c7963dc"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "054ed12d3c7963dc",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "Status",
+        "property": "payload",
+        "x": 1350,
+        "y": 210,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "0196554b4827127d",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "0806bf976ba9fedf",
+        "name": "Status",
+        "property": "payload",
+        "x": 1350,
+        "y": 255,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "39ccc54c8b7cb5fe",
+        "type": "subflow:637901a8a4b4fbe6",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "EnergyPrices",
+        "x": 445,
+        "y": 1260,
+        "wires": [
+            [
+                "943c5d388e573baa",
+                "50e28540de73b8da",
+                "2d1f418021f66274"
+            ],
+            [
+                "4a64ecb899f52f16"
+            ],
+            [],
+            [],
+            [],
+            [
+                "2c7cb56710a55461"
+            ],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "1483ebee0d510271",
+        "type": "inject",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "rejectUnauthorized",
+                "v": "false",
+                "vt": "bool"
+            },
+            {
+                "p": "array",
+                "v": "[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\",\"11\",\"12\",\"13\",\"14\",\"15\",\"16\",\"17\",\"18\",\"19\",\"20\",\"21\",\"22\",\"23\"]",
+                "vt": "json"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 275,
+        "y": 1260,
+        "wires": [
+            [
+                "39ccc54c8b7cb5fe"
+            ]
+        ]
+    },
+    {
+        "id": "2d1f418021f66274",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "Status",
+        "property": "payload",
+        "x": 840,
+        "y": 1200,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "2c7cb56710a55461",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "Status",
+        "property": "payload",
+        "x": 585,
+        "y": 1335,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "cab2ea373352a433",
+        "type": "link in",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "g": "d4b6c5d96178199d",
+        "name": "Electricity Price",
+        "links": [
+            "380b93653aa12193"
+        ],
+        "x": 450,
+        "y": 1140,
+        "wires": [
+            [
+                "943c5d388e573baa",
+                "50e28540de73b8da"
+            ]
+        ]
+    },
+    {
+        "id": "b19736f0c8bd39ef",
+        "type": "subflow:09d6fac281cb8b29",
+        "z": "d05ee1cf0cde18fb",
+        "g": "d4b6c5d96178199d",
+        "name": "",
+        "x": 1090,
+        "y": 1080,
+        "wires": [
+            [
+                "acf6da2be67649d0"
+            ]
+        ]
+    },
+    {
+        "id": "6ccf7627e3adcc53",
+        "type": "subflow:6daf500cc4957e3f",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "name": "",
+        "x": 1055,
+        "y": 750,
+        "wires": [
+            [
+                "ad0326cb9276bfc7"
+            ]
+        ]
+    },
+    {
+        "id": "7e9e31f8a0a653da",
+        "type": "ui-chart",
+        "z": "d05ee1cf0cde18fb",
+        "g": "6910a721521b3245",
+        "group": "1f577f21a19951f0",
+        "name": "SMA Tripower 5.0",
+        "label": "SMA Tripower 5.0",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "time [last 20min]",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "mm",
+        "xAxisFormatType": "custom",
+        "yAxisLabel": "Power [W]",
+        "yAxisProperty": "",
+        "ymin": "0",
+        "ymax": "5000",
+        "action": "append",
+        "pointShape": "line",
+        "pointRadius": "2",
+        "showLegend": true,
+        "removeOlder": "20",
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": [
+            "#19e119",
+            "#1ea1de",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "width": "6",
+        "height": "5",
+        "className": "",
+        "x": 1710,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9a4fc1d46f7db5c0",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "name": "Status",
+        "property": "payload",
+        "x": 1619.1368408203125,
+        "y": 939.8412475585938,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "6679c7fbf0576d23",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "a678bc53679ed1ba",
+        "name": "PowerLimit",
+        "property": "payload",
+        "x": 1540,
+        "y": 1335,
+        "wires": [
+            []
+        ],
+        "icon": "node-red/leveldb.svg"
+    },
+    {
+        "id": "1acc6ff36d9e38c5",
+        "type": "ui-slider",
+        "z": "d05ee1cf0cde18fb",
+        "g": "853901e604ced968",
+        "group": "1f577f21a19951f0",
+        "name": "Marge",
+        "label": "Marge",
+        "tooltip": "",
+        "order": 12,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "outs": "end",
+        "topic": "Marge",
+        "topicType": "global",
+        "thumbLabel": "always",
+        "showTicks": "false",
+        "min": "0",
+        "max": "1000",
+        "step": "50",
+        "color": "",
+        "colorTrack": "",
+        "colorThumb": "",
+        "className": "",
+        "x": 415,
+        "y": 885,
+        "wires": [
+            [
+                "1f409c04b106f620",
+                "70facafcfd819c3a"
+            ]
+        ]
+    },
+    {
+        "id": "a6d527e30a77ea98",
+        "type": "StatusUltimate",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "Status",
+        "property": "payload",
+        "x": 1965,
+        "y": 1125,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "42d2cd2363f70fa7",
+        "type": "function",
+        "z": "d05ee1cf0cde18fb",
+        "g": "12f2e402136817ed",
+        "name": "0.xx",
+        "func": "msg.payload= msg.payload.toFixed(0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1885,
+        "y": 1065,
+        "wires": [
+            [
+                "9864caa8d5d6400d"
+            ]
+        ]
+    },
+    {
+        "id": "2409730bfe379d4c",
+        "type": "ui_spacer",
+        "z": "d05ee1cf0cde18fb",
+        "d": true,
+        "name": "spacer",
+        "group": "",
+        "order": 9,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "2d9d46b337e0ac08",
+        "type": "ui_spacer",
+        "z": "d05ee1cf0cde18fb",
+        "name": "spacer",
+        "group": "9ab1e6eea3bbe93e",
+        "order": 1,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "de90cba1b864c6cb",
+        "type": "ui_spacer",
+        "z": "d05ee1cf0cde18fb",
+        "name": "spacer",
+        "group": "",
+        "order": 11,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "df281b7c68c3ab56",
+        "type": "ui_spacer",
+        "z": "d05ee1cf0cde18fb",
+        "name": "spacer",
+        "group": "",
+        "order": 14,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "720661e550c2de19",
+        "type": "modbus-client",
+        "name": "SMA Modbus",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.178.4",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": 3,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": true,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "1f577f21a19951f0",
+        "type": "ui-group",
+        "name": "SMA  settings",
+        "page": "af2240e5c72311cb",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "9ab1e6eea3bbe93e",
+        "type": "ui_group",
+        "name": "Solar",
+        "tab": "cccf47e4.857ec8",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "af2240e5c72311cb",
+        "type": "ui-page",
+        "name": "Energy",
+        "ui": "8ee88cb8a3e93693",
+        "path": "/energy",
+        "icon": "battery_charging_60",
+        "layout": "flex",
+        "theme": "66d991c71fbeaf8c",
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "cccf47e4.857ec8",
+        "type": "ui_tab",
+        "name": "My Home",
+        "icon": "battery_charging_60",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "8ee88cb8a3e93693",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "showPageTitle": true,
+        "navigationStyle": "default",
+        "titleBarStyle": "default"
+    },
+    {
+        "id": "66d991c71fbeaf8c",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#097479",
+            "primary": "#289a35",
+            "bgPage": "#000000",
+            "groupBg": "#d8fec8",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    }
+]
