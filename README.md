@@ -13,6 +13,11 @@ As an example I used anwb current hour price as input for the Dynamic Price Cont
 \
 \
 \
+
+![image](https://github.com/user-attachments/assets/9eeefc47-b063-4c43-b206-393f6207d5a2)
+\
+\
+
 "SMA Settings" flow:
 
 
@@ -45,7 +50,7 @@ Demo: https://youtube.com/shorts/uC5JbVD4Qa8
 
 
 version: 
-
+0.8.4 : Dashboard 2.0 version \
 0.8.3 : Created a work around for Node-red issue: #4826 (broken node "http-get" in ver4.0)\
 0.8.2 : Added Option to use more than one inverter\
 0.8.1.2 : Fixed issue with price limit slider \
