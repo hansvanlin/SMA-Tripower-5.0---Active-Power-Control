@@ -50,7 +50,7 @@ Demo: https://youtube.com/shorts/uC5JbVD4Qa8
 
 
 
-version: 
+version: \
 0.8.4 : Dashboard 2.0 version \
 0.8.3 : Created a work around for Node-red issue: #4826 (broken node "http-get" in ver4.0)\
 0.8.2 : Added Option to use more than one inverter\
