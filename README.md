@@ -13,6 +13,7 @@ As an example I used anwb current hour price as input for the Dynamic Price Cont
 \
 \
 \
+Dashboard 2.0:
 
 ![image](https://github.com/user-attachments/assets/9eeefc47-b063-4c43-b206-393f6207d5a2)
 \
