@@ -8,6 +8,8 @@ Enable and set correct Ip adress in the modbus write/read node.
 For manual control the slider can be use to set the powerlevel in %, \
 or active control depending on the energy used, 
 for this you need to measure or calculated the current use and feed that as input.
+Marge can be used to create a little feedback to the grid so that batteries can start charging
+and control antifeed.
 
 As an example I used anwb current hour price as input for the Dynamic Price Control.
 \
