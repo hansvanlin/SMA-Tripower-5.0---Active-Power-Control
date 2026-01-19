@@ -49,10 +49,12 @@ Simple Initial version 0.3:
 Demo: https://youtube.com/shorts/uC5JbVD4Qa8 
 
 
+<img width="733" height="489" alt="image" src="https://github.com/user-attachments/assets/7dd13326-b487-4453-8b53-43c9a5e2ef34" />
 
 
 
 version: \
+0.8.5 : Added Optional Battery Input for proper calculation Limit\
 0.8.4 : Dashboard 2.0 version \
 0.8.3 : Created a work around for Node-red issue: #4826 (broken node "http-get" in ver4.0)\
 0.8.2 : Added Option to use more than one inverter\
