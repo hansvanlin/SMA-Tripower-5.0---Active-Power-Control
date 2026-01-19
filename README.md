@@ -51,7 +51,7 @@ Demo: https://youtube.com/shorts/uC5JbVD4Qa8
 
 
 
-New Optional Battery Input:
+New Optional Battery Input:\
 <img width="733" height="489" alt="image" src="https://github.com/user-attachments/assets/7dd13326-b487-4453-8b53-43c9a5e2ef34" />
 
 
