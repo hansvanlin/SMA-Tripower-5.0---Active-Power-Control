@@ -13,7 +13,7 @@ and control antifeed.
 
 As an example I used anwb current hour price as input for the Dynamic Price Control.
 \
-\
+Check also my Marstek venus control :https://github.com/hansvanlin/Marstek-venus-A/tree/main
 \
 Included Battery Charging Value:
 
