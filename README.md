@@ -17,7 +17,8 @@ As an example I used anwb current hour price as input for the Dynamic Price Cont
 \
 Included Battery Charging Value:
 
-<img width="462" height="998" alt="image" src="https://github.com/user-attachments/assets/32dce368-8f13-4c9a-bb22-eda09bde9b5a" /><img width="522" height="885" alt="image" src="https://github.com/user-attachments/assets/f50ed738-9e66-4119-8101-9bf75d06d86c" />
+<img width="462" height="998" alt="image" src="https://github.com/user-attachments/assets/32dce368-8f13-4c9a-bb22-eda09bde9b5a" /><img width="344" height="596" alt="image" src="https://github.com/user-attachments/assets/296bc11f-c4b0-430b-8bc6-7ecc4af1dadb" />
+
 
 
 \
@@ -59,6 +60,7 @@ New Optional Battery Input:\
 
 
 version: \
+0.8.6 : Added Optional Battery graph and output value\
 0.8.5 : Added Optional Battery Input for proper calculation Limit\
 0.8.4 : Dashboard 2.0 version \
 0.8.3 : Created a work around for Node-red issue: #4826 (broken node "http-get" in ver4.0)\
