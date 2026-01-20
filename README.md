@@ -15,6 +15,8 @@ As an example I used anwb current hour price as input for the Dynamic Price Cont
 \
 Check also my Marstek venus control :https://github.com/hansvanlin/Marstek-venus-A/tree/main
 \
+\
+\
 Included Battery Charging Value:
 
 <img width="462" height="998" alt="image" src="https://github.com/user-attachments/assets/32dce368-8f13-4c9a-bb22-eda09bde9b5a" /><img width="344" height="596" alt="image" src="https://github.com/user-attachments/assets/296bc11f-c4b0-430b-8bc6-7ecc4af1dadb" />
