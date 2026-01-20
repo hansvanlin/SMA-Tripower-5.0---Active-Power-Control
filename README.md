@@ -15,9 +15,11 @@ As an example I used anwb current hour price as input for the Dynamic Price Cont
 \
 \
 \
-Dashboard 2.0:
+Included Battery Charging Value:
 
-![image](https://github.com/user-attachments/assets/9eeefc47-b063-4c43-b206-393f6207d5a2)
+<img width="462" height="998" alt="image" src="https://github.com/user-attachments/assets/32dce368-8f13-4c9a-bb22-eda09bde9b5a" /><img width="522" height="885" alt="image" src="https://github.com/user-attachments/assets/f50ed738-9e66-4119-8101-9bf75d06d86c" />
+
+
 \
 \
 
