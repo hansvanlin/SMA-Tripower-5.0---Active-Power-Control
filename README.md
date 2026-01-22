@@ -24,7 +24,8 @@ Check also my Marstek venus control :https://github.com/hansvanlin/Marstek-venus
 \
 Included Battery Charging Value:
 
-<img width="1663" height="944" alt="image" src="https://github.com/user-attachments/assets/433ebe5b-5778-4088-b46b-4ecb745ad39c" />
+<img width="1665" height="945" alt="image" src="https://github.com/user-attachments/assets/a17b2c79-e0b0-4d03-9e6b-93690d6bc7e4" />
+
 
 
 
