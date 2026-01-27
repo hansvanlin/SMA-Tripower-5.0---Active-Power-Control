@@ -21,6 +21,8 @@ As an example I used anwb current hour price as input for the Dynamic Price Cont
 Check also my Marstek venus control :https://github.com/hansvanlin/Marstek-venus-A/tree/main
 \
 \
+Modbus test tool: https://flows.nodered.org/flow/e23f1387358c45281e10b83a8fc65744
+\
 \
 Included Battery Charging Value:
 
