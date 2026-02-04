@@ -30,6 +30,8 @@ Included Battery Charging Value:
 
 
 
+Dynamic control off and on with 50W marge.
+<img width="281" height="522" alt="image" src="https://github.com/user-attachments/assets/c6a1a441-aa7c-44fc-baa3-5866aa3d69fe" />
 
 
 \
