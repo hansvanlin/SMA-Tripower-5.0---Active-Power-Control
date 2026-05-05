@@ -16,7 +16,8 @@ for this you need to measure or calculated the current use and feed that as inpu
 Marge can be used to create a little feedback to the grid so that batteries can start charging
 and control antifeed.
 
-As an example I used anwb current hour price as input for the Dynamic Price Control.
+I used ZonnePlan current hour price as input for the Dynamic Price Control.
+create a free personal toke at: https://enever.nl/token-aanmaken/
 \
 Check also my Marstek venus control: https://github.com/hansvanlin/Marstek-venus-A/tree/main
 \
