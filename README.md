@@ -17,7 +17,8 @@ Marge can be used to create a little feedback to the grid so that batteries can 
 and control antifeed.
 
 I used ZonnePlan current hour price as input for the Dynamic Price Control.
-create a free personal toke at: https://enever.nl/token-aanmaken/
+\
+Create a free personal toke at: https://enever.nl/token-aanmaken/
 \
 Check also my Marstek venus control: https://github.com/hansvanlin/Marstek-venus-A/tree/main
 \
