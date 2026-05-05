@@ -1,0 +1,314 @@
+[
+    {
+        "id": "c111b612cbe93b7b",
+        "type": "tab",
+        "label": "ZonnePlan_needs token",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "730904f1885672b6",
+        "type": "junction",
+        "z": "c111b612cbe93b7b",
+        "x": 650,
+        "y": 180,
+        "wires": [
+            [
+                "3c0206ed0997d1ff",
+                "7fc8945851ea88b7"
+            ]
+        ]
+    },
+    {
+        "id": "50c8a08b3ec79f73",
+        "type": "http request",
+        "z": "c111b612cbe93b7b",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://enever.nl/apiv3/stroomprijs_vandaag.php?token=YOUR_TOKEN&resolution=60&price=prijs,prijsZP",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "939e580fd80dbbc1",
+                "d75ef09ae585bfa9"
+            ]
+        ]
+    },
+    {
+        "id": "939e580fd80dbbc1",
+        "type": "json",
+        "z": "c111b612cbe93b7b",
+        "name": "Convert to json",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 550,
+        "y": 180,
+        "wires": [
+            [
+                "730904f1885672b6"
+            ]
+        ]
+    },
+    {
+        "id": "7fc8945851ea88b7",
+        "type": "debug",
+        "z": "c111b612cbe93b7b",
+        "name": "debug 42",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 740,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "5464685bb83486de",
+        "type": "inject",
+        "z": "c111b612cbe93b7b",
+        "name": "15h",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 15 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 180,
+        "wires": [
+            [
+                "50c8a08b3ec79f73"
+            ]
+        ]
+    },
+    {
+        "id": "3c0206ed0997d1ff",
+        "type": "change",
+        "z": "c111b612cbe93b7b",
+        "name": "Global save ZonneplanTijdsloten",
+        "rules": [
+            {
+                "t": "set",
+                "p": "ZonneplanTijdsloten",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 810,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "11db4dbc65d9030f",
+        "type": "function",
+        "z": "c111b612cbe93b7b",
+        "name": "PVSurplusW",
+        "func": "//var solarpwr = Number(global.get(\"SolarPwr\")[0]);\n//var actualuse = Number(global.get(\"ActualUse\")[0]) ;\n//var surplus = solarpwr - actualuse ; //or negative p1 power\n\nvar p1pwr = Number(global.get(\"P1Power\"))\n\nif(p1pwr < 0){\n    p1pwr = Math.abs(p1pwr)\n    global.set(\"PVSurplusW\" ,p1pwr) \n}\n\nelse {\n    p1pwr = 0 \n    global.set(\"PVSurplusW\" ,p1pwr)\n}\nmsg.payload = p1pwr ;\n\nnode.status({fill:'green',shape:'ring',text:'Surplus ' + p1pwr});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 350,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "32f4f483d982e3d1",
+        "type": "inject",
+        "z": "c111b612cbe93b7b",
+        "name": "1 sec",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 350,
+        "wires": [
+            [
+                "11db4dbc65d9030f"
+            ]
+        ]
+    },
+    {
+        "id": "d75ef09ae585bfa9",
+        "type": "file",
+        "z": "c111b612cbe93b7b",
+        "name": "",
+        "filename": "/home/pi/prijs.txt",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 550,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2f55a559cebe2d7a",
+        "type": "file in",
+        "z": "c111b612cbe93b7b",
+        "name": "",
+        "filename": "/home/pi/prijs.txt",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 370,
+        "y": 110,
+        "wires": [
+            [
+                "939e580fd80dbbc1"
+            ]
+        ]
+    },
+    {
+        "id": "edf6c477f05c3c5a",
+        "type": "inject",
+        "z": "c111b612cbe93b7b",
+        "name": "Reload ",
+        "props": [],
+        "repeat": "300",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.5",
+        "topic": "",
+        "x": 190,
+        "y": 110,
+        "wires": [
+            [
+                "2f55a559cebe2d7a"
+            ]
+        ]
+    },
+    {
+        "id": "13887a91b76c7bc3",
+        "type": "function",
+        "z": "c111b612cbe93b7b",
+        "name": "Price current hour (Zonneplan)",
+        "func": "msg.payload = global.get(\"ZonneplanTijdsloten\") ;\n\n\nvar date = new Date();\n\nvar Chour = date.getHours() ;\n\n\nvar msg = Number(msg.payload.data[Chour].prijsZP) ;\nnode.status({ fill: \"green\", shape: \"ring\", text: \"Current Price: \" + msg });\nmsg.topic = \"CurrentPrice\" ;\nreturn [{payload: msg}];\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 430,
+        "wires": [
+            [
+                "81ac94fc0a6c2cb3"
+            ]
+        ]
+    },
+    {
+        "id": "81ac94fc0a6c2cb3",
+        "type": "change",
+        "z": "c111b612cbe93b7b",
+        "name": "ZonneplanCurrentHour",
+        "rules": [
+            {
+                "t": "set",
+                "p": "ZonneplanCurrentHour",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 700,
+        "y": 430,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "669b1c9d83016a29",
+        "type": "inject",
+        "z": "c111b612cbe93b7b",
+        "name": "1 min",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 430,
+        "wires": [
+            [
+                "13887a91b76c7bc3"
+            ]
+        ]
+    },
+    {
+        "id": "3b293defb698ed26",
+        "type": "comment",
+        "z": "c111b612cbe93b7b",
+        "name": "Version 0.01",
+        "info": "0.01 initial version (obtaine a token at enever.nl)",
+        "x": 980,
+        "y": 90,
+        "wires": []
+    }
+]
