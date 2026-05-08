@@ -20,6 +20,7 @@ I use the ZonnePlan current hour price as input for the Dynamic Price Control.
 You can also select a different one from enever.
 \
 Create a free personal token at: https://enever.nl/token-aanmaken/
+\
 Import sma and zonneplan flows.
 \
 Check also my Marstek venus control: https://github.com/hansvanlin/Marstek-venus-A/tree/main
