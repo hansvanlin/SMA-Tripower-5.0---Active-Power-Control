@@ -16,7 +16,8 @@ for this you need to measure or calculated the current use and feed that as inpu
 Marge can be used to create a little feedback to the grid so that batteries can start charging
 and control antifeed.
 
-I used ZonnePlan current hour price as input for the Dynamic Price Control.
+I use the ZonnePlan current hour price as input for the Dynamic Price Control.
+You can also select a different one from enever.
 \
 Create a free personal token at: https://enever.nl/token-aanmaken/
 Import sma and zonneplan flows.
